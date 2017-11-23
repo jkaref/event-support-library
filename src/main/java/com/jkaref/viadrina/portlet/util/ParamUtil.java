@@ -1,5 +1,6 @@
 package com.jkaref.viadrina.portlet.util;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -84,11 +85,16 @@ public class ParamUtil extends com.liferay.portal.kernel.util.ParamUtil {
 		String selectedCalendarIds = request.getPreferences().getValue(
 				SELECTED_CALENDARS, DEFAULT_SELECTED_CALENDARS);
 		
-		if(!selectedCalendarIds.isEmpty()) {
+		if (!selectedCalendarIds.isEmpty()) {
 			List<String> list = Arrays.asList(selectedCalendarIds.split(StringPool.COMMA));
-			result = list.stream().map(stringToLong).collect(Collectors.toList());						
+
+			result = new ArrayList<Long>();
+			for (String id : list) {
+				result.add(Long.valueOf(id));
+			}
+
 		}
-				
+	
 		return result;
 				
 	}
@@ -103,13 +109,5 @@ public class ParamUtil extends com.liferay.portal.kernel.util.ParamUtil {
 		
 		return getInteger(request, DELTA, DEFAULT_DELTA);
 	}
-	
-	private static Function<String, Long> stringToLong = new Function<String, Long>() {
-		@Override
-		public Long apply(String t) {
-			
-			return Long.valueOf(t);
-		}
-	};
 
 }

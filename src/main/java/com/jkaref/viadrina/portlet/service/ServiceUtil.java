@@ -2,6 +2,7 @@ package com.jkaref.viadrina.portlet.service;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -116,19 +117,44 @@ public class ServiceUtil {
 
 
 	public static List<KeyValuePair> getSelectedCalendars(List<Calendar> calendars, List<Long> selectedCalendarIds) {
+		
+		List<KeyValuePair> result = new ArrayList<>();
+		
+		for(Calendar calendar : calendars) {
+			
+			if (selectedCalendarIds.contains(calendar.getCalendarId())) {
 				
-		return calendars.stream()
-				.filter(filterSelected(selectedCalendarIds))
-				.map(toKeyValuePair).collect(Collectors.toList());
+				KeyValuePair keyValuePair = new KeyValuePair(
+						String.valueOf(calendar.getCalendarId()), 
+						calendar.getNameCurrentValue());
+				
+				result.add(keyValuePair);
+			}
+			
+		}
+				
+		return result;
 		
 	}
 
 	public static List<KeyValuePair> getAvailableCalendars(List<Calendar> calendars, List<Long> selectedCalendarIds) {
-		return getCalendars()
-				.stream()
-				.filter(filterAvailable(selectedCalendarIds))
-				.map(toKeyValuePair)
-				.collect(Collectors.toList());
+		
+		List<KeyValuePair> result = new ArrayList<>();
+		
+		for(Calendar calendar : calendars) {
+			
+			if (selectedCalendarIds.contains(calendar.getCalendarId())) {
+				
+				KeyValuePair keyValuePair = new KeyValuePair(
+						String.valueOf(calendar.getCalendarId()), 
+						calendar.getNameCurrentValue());
+				
+				result.add(keyValuePair);
+			}
+			
+		}
+				
+		return result;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -152,8 +178,7 @@ public class ServiceUtil {
 						result.size(), result.size() == 1 ? "event" : "events");
 				
 			} catch (SystemException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				LOG.warn("[getCalendarBookings] - Failed to retrieve bookings.", e);
 			}
 		} else {
 			LOG.warn("[getCalendarBookings] - Failed to retrieve events because there is no calendar selected.");
@@ -175,12 +200,9 @@ public class ServiceUtil {
 				LOG.trace("[getCalendarBookingsCount] - Count is {}", result);
 				
 			} catch (SystemException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				LOG.warn("[getCalendarBookingsCount] - Failed to retrieve bookings count, returning 0.", e);
 			}
 		}
-		
-		
 		
 		return result;
 	}
@@ -244,28 +266,7 @@ public class ServiceUtil {
 		return result;
 		
 	}
-	
-	private static Function<Calendar, KeyValuePair> toKeyValuePair = new Function<Calendar, KeyValuePair>() {
-		
-		public KeyValuePair apply(Calendar t) {
-			
-			String calendarId = String.valueOf(t.getCalendarId());
-			
-			
-			return new KeyValuePair(calendarId, t.getNameCurrentValue());
-			
-		};
-		
-	};
-	
-	private static Predicate<Calendar> filterAvailable(List<Long> selectedCalendarIds) {
-		return c -> !selectedCalendarIds.contains(c.getCalendarId());
-	}
 
-	private static Predicate<Calendar> filterSelected(List<Long> selectedCalendarIds) {
-		return c -> selectedCalendarIds.contains(c.getCalendarId());
-	}
-	
 
 	private static int getStart(int current, int delta) {
 		return (current * delta) - delta;
