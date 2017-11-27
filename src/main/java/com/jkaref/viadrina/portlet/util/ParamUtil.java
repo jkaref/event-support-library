@@ -17,12 +17,14 @@ public class ParamUtil extends com.liferay.portal.kernel.util.ParamUtil {
 	private static final Integer DEFAULT_CUR = 1;
 	private static final Integer DEFAULT_LIMIT = 20;
 	private static final String DEFAULT_CALENDAR_ID = StringPool.BLANK;
+	private static final String DEFAULT_CALENDAR_URL = "/veranstaltungskalender/";
 	private static final String DEFAULT_HIDDEN_EVENTS_JSON = "[]";
 	private static final String DEFAULT_BACKGROUND_COLOR = "#52a5fa";
 	private static final String DEFAULT_SELECTED_CALENDARS = StringPool.BLANK;
 
 	private static final String LIMIT = Param.LIMIT.string();
 	private static final String CALENDAR_ID = Param.CALENDAR_ID.string();
+	private static final String CALENDAR_URL = Param.CALENDAR_PORTLET_URL.string();
 	private static final String HIDDEN_EVENTS_JSON = Param.HIDDEN_EVENTS_JSON.string();
 	private static final String BACKGROUND_COLOR = Param.BACKGROUND_COLOR.string();
 	private static final String SELECTED_CALENDARS = Param.SELECTED_CALENDARS.string();
@@ -106,6 +108,18 @@ public class ParamUtil extends com.liferay.portal.kernel.util.ParamUtil {
 	public static int getDelta(PortletRequest request) {
 		
 		return getInteger(request, DELTA, DEFAULT_DELTA);
+	}
+
+	public static String getCalendarUrl(PortletPreferences prefs) {
+		
+		return prefs.getValue(CALENDAR_URL, DEFAULT_CALENDAR_URL);
+		
+	}
+	
+	public static String getCalendarUrl(PortletRequest request) {
+		
+		return getString(request, CALENDAR_URL, DEFAULT_CALENDAR_URL);
+		
 	}
 
 }
